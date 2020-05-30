@@ -47,10 +47,60 @@ flutter:
     - family: Tifinaghe
       fonts:
         - asset: fonts/Tifinaghe.ttf
+        - asset: fonts/Tifinagh/Tifinaghe.ttf
 
     - family: Anaruz
       fonts:
         - asset: fonts/Tifinagh/anaruz.ttf
-  #
-  # For details regarding fonts in packages, see
-  # https://flutter.dev/custom-fonts/#from-packages
+
+    - family: Adar
+      fonts:
+        - asset: fonts/Tifinagh/Adar-Regular.ttf
+
+    - family: Afrag
+      fonts:
+        - asset: fonts/Tifinagh/Afrag.ttf
+
+    - family: Agraghlan
+      fonts:
+        - asset: fonts/Tifinagh/Agraghlan.ttf
+
+    - family: Amnnagh
+      fonts:
+        - asset: fonts/Tifinagh/Amnnagh.ttf
+
+    - family: Amnzu
+      fonts:
+        - asset: fonts/Tifinagh/Amnzu-Regular.ttf
+
+    - family: Amtroy
+      fonts:
+        - asset: fonts/Tifinagh/Amtroy.ttf
+
+    - family: Amurar
+      fonts:
+        - asset: fonts/Tifinagh/Amurar.ttf
+
+    - family: Anbraz
+      fonts:
+        - asset: fonts/Tifinagh/anbraz.ttf
+
+    - family: Asfrgh
+      fonts:
+        - asset: fonts/Tifinagh/Asfrgh.ttf
+
+    - family: Izriri
+      fonts:
+        - asset: fonts/Tifinagh/Izriri.ttf
+
+    - family: Tidrfi
+      fonts:
+        - asset: fonts/Tifinagh/Tidrfi.ttf
+
+    - family: Tidrfi_bold
+      fonts:
+        - asset: fonts/Tifinagh/Tidrfi_bd.ttf
+
+    - family: Tinmlt
+      fonts:
+        - asset: fonts/Tifinagh/tinmlt.ttf

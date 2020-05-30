@@ -32,9 +32,21 @@ class _TextEditorState extends State<TextEditor> {
 
     tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Tifinaghe"));
     tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Anaruz"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Adar"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Afrag"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Agraghlan"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Amnnagh"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Amnzu"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Amtroy"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Amurar"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Anbraz"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Asfrgh"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Izriri"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Tidrfi"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Tidrfi_bold"));
+    tamazight.add(Fonts("ⵜⴰⵎⴰⵣⵉⵖⵜ", "Tinmlt"));
     super.initState();
   }
-
 
   bool visible = false;
 
@@ -245,3 +257,4 @@ class Fonts {
     this.f,
   );
 }
+//Yasser
