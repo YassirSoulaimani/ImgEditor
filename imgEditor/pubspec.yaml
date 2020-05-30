@@ -1,0 +1,132 @@
+name: image_editor_pro
+description: Image Editor Plugin with simple, easy support for image editing using paints,text and emoji like stories.
+version: 1.0.6
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  zoom_widget: ^0.1.3
+  font_awesome_flutter: ^8.7.0
+  image_picker: ^0.6.3+1
+  path_provider: ^1.6.5
+  image_gallery_saver: ^1.2.2
+  flutter_material_pickers: ^1.5.2
+  permission_handler: ^5.0.0+hotfix.3
+  dio: ^3.0.9
+  screenshot: ^0.1.1
+  signature: ^3.0.0
+  flutter_colorpicker: ^0.3.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: fonts/Raleway-Regular.ttf
+
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/RobotoMono-Regular.ttf
+
+    - family: Questv1
+      fonts:
+        - asset: fonts/Questv1-Bold.ttf
+
+    - family: Tifinaghe
+      fonts:
+        - asset: fonts/Tifinagh/Tifinaghe.ttf
+
+    - family: Anaruz
+      fonts:
+        - asset: fonts/Tifinagh/anaruz.ttf
+
+    - family: Adar
+      fonts:
+        - asset: fonts/Tifinagh/Adar-Regular.ttf
+
+    - family: Afrag
+      fonts:
+        - asset: fonts/Tifinagh/Afrag.ttf
+    
+    - family: Agraghlan
+      fonts:
+        - asset: fonts/Tifinagh/Agraghlan.ttf
+
+    - family: Amnnagh
+      fonts:
+        - asset: fonts/Tifinagh/Amnnagh.ttf
+  
+    - family: Amnzu
+      fonts:
+        - asset: fonts/Tifinagh/Amnzu-Regular.ttf
+
+    - family: Amtroy
+      fonts:
+        - asset: fonts/Tifinagh/Amtroy.ttf
+
+    - family: Amurar
+      fonts:
+        - asset: fonts/Tifinagh/Amurar.ttf
+
+    - family: Anbraz
+      fonts:
+        - asset: fonts/Tifinagh/anbraz.ttf
+
+    - family: Asfrgh
+      fonts:
+        - asset: fonts/Tifinagh/Asfrgh.ttf
+
+    - family: Izriri
+      fonts:
+        - asset: fonts/Tifinagh/Izriri.ttf
+
+    - family: Tidrfi
+      fonts:
+        - asset: fonts/Tifinagh/Tidrfi.ttf
+
+    - family: Tidrfi_bold
+      fonts:
+        - asset: fonts/Tifinagh/Tidrfi_bd.ttf
+
+    - family: Tinmlt
+      fonts:
+        - asset: fonts/Tifinagh/tinmlt.ttf
+  
+  #
+  # For details regarding fonts in packages, see
+  # https://flutter.dev/custom-fonts/#from-packages
+
+#Agraghlan
+#Amnnagh
+#Amnzu
+#Amtroy
+#Amurar
+#anbraz
+#Asfrgh
+#Izriri
+#Tidrfi
+#Tidrfi_bold
+#tinmlt
+#Adar
+#Afrag
+#
+#
+#
+#
+#
+#
+#
+#
+#
