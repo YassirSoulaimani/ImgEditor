@@ -41,14 +41,9 @@ class _TextViewState extends State<TextView> {
           onTap: widget.ontap,
           onPanUpdate: widget.onpanupdate,
           child: widget.pressed
-              ? Column(
+              ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    IconButton(
-                      icon: new Icon(Icons.delete_forever),
-                      color: Colors.red,
-                      onPressed: widget.ontap2,
-                    ),
                     DottedBorder(
                         borderType: BorderType.RRect,
                         radius: Radius.circular(12),
@@ -58,15 +53,22 @@ class _TextViewState extends State<TextView> {
                             style: TextStyle(
                                 fontSize: widget.fontsize,
                                 color: widget.color,
-                                fontFamily: widget.font)))
+                                fontFamily: widget.font))),
+                    IconButton(
+                      icon: new Icon(Icons.delete_forever),
+                      color: Colors.red,
+                      onPressed: widget.ontap2,
+                    )
                   ],
                 )
-              : Text(widget.value,
-                  textAlign: widget.align,
-                  style: TextStyle(
-                      fontSize: widget.fontsize,
-                      color: widget.color,
-                      fontFamily: widget.font))),
+              : Container(
+                  padding: EdgeInsets.all(7),
+                  child: Text(widget.value,
+                      textAlign: widget.align,
+                      style: TextStyle(
+                          fontSize: widget.fontsize,
+                          color: widget.color,
+                          fontFamily: widget.font)))),
     );
   }
 }
