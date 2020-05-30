@@ -56,6 +56,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
         SignatureController(penStrokeWidth: 5, penColor: color, points: points);
   }
 
+  List selected = [];
   List<Offset> offsets = [];
   Offset offset1 = Offset.zero;
   Offset offset2 = Offset.zero;
@@ -87,6 +88,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
   @override
   void initState() {
     timers();
+    selected.clear();
     _controller.clear();
     type.clear();
     fontsize.clear();
@@ -271,10 +273,9 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                   ? TextView(
                                       left: offsets[f.key].dx,
                                       top: offsets[f.key].dy,
-                                      pressed: press,
+                                      pressed: selected[f.key],
                                       ontap2: () {
                                         multiwidget.removeAt(f.key);
-                                        type.add(2);
                                         color.removeAt(f.key);
                                         fontsize.removeAt(f.key);
                                         fonts.removeAt(f.key);
@@ -283,7 +284,8 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                         howmuchwidgetis--;
                                       },
                                       ontap: () {
-                                        press = !press;
+                                        selected[f.key] = !selected[f.key];
+
                                         scaf.currentState
                                             .showBottomSheet((context) {
                                           return Sliders(
@@ -372,6 +374,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                           fonts.add(value["c"]);
                           offsets.add(Offset.zero);
                           multiwidget.add(value["a"]);
+                          selected.add(false);
                           howmuchwidgetis++;
                         }
                       },
