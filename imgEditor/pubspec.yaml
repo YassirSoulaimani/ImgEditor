@@ -19,6 +19,7 @@ dependencies:
   dio: ^3.0.9
   screenshot: ^0.1.1
   signature: ^3.0.0
+  dotted_border: ^1.0.5
   flutter_colorpicker: ^0.3.2
 dev_dependencies:
   flutter_test:

@@ -64,7 +64,7 @@ class _ImageEditorProState extends State<ImageEditorPro> {
   List<Offset> _points = <Offset>[];
   List type = [];
   List aligment = [];
-
+  bool press = false;
   final GlobalKey container = GlobalKey();
   final GlobalKey globalKey = new GlobalKey();
   File _image;
@@ -271,7 +271,19 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                                   ? TextView(
                                       left: offsets[f.key].dx,
                                       top: offsets[f.key].dy,
+                                      pressed: press,
+                                      ontap2: () {
+                                        multiwidget.removeAt(f.key);
+                                        type.add(2);
+                                        color.removeAt(f.key);
+                                        fontsize.removeAt(f.key);
+                                        fonts.removeAt(f.key);
+                                        offsets.removeAt(f.key);
+                                        multiwidget.removeAt(f.key);
+                                        howmuchwidgetis--;
+                                      },
                                       ontap: () {
+                                        press = !press;
                                         scaf.currentState
                                             .showBottomSheet((context) {
                                           return Sliders(
@@ -562,12 +574,10 @@ class _SlidersState extends State<Sliders> {
     super.initState();
   }
 
-  static const items = <String>["RobotoMono", "Raleway"];
-
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 260,
+        height: 120,
         child: Column(
           children: <Widget>[
             Padding(
