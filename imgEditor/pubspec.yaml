@@ -1,0 +1,56 @@
+name: image_editor_pro
+description: Image Editor Plugin with simple, easy support for image editing using paints,text and emoji like stories.
+version: 1.0.6
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  zoom_widget: ^0.1.3
+  font_awesome_flutter: ^8.7.0
+  image_picker: ^0.6.3+1
+  path_provider: ^1.6.5
+  image_gallery_saver: ^1.2.2
+  flutter_material_pickers: ^1.5.2
+  permission_handler: ^5.0.0+hotfix.3
+  dio: ^3.0.9
+  screenshot: ^0.1.1
+  signature: ^3.0.0
+  flutter_colorpicker: ^0.3.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: fonts/Raleway-Regular.ttf
+
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/RobotoMono-Regular.ttf
+
+    - family: Questv1
+      fonts:
+        - asset: fonts/Questv1-Bold.ttf
+
+    - family: Tifinaghe
+      fonts:
+        - asset: fonts/Tifinaghe.ttf
+
+    - family: Anaruz
+      fonts:
+        - asset: fonts/Tifinagh/anaruz.ttf
+  #
+  # For details regarding fonts in packages, see
+  # https://flutter.dev/custom-fonts/#from-packages
