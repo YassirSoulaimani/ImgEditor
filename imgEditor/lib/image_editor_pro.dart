@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +12,7 @@ import 'package:image_editor_pro/modules/emoji.dart';
 import 'package:image_editor_pro/modules/text.dart';
 import 'package:image_editor_pro/modules/textview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:signature/signature.dart';
 
@@ -33,8 +33,16 @@ SignatureController _controller =
 
 class ImageEditorPro extends StatefulWidget {
   final Color appBarColor;
+  final File image;
+  final double width;
+  final double height;
   final Color bottomBarColor;
-  ImageEditorPro({this.appBarColor, this.bottomBarColor});
+  ImageEditorPro(
+      {this.appBarColor,
+      this.bottomBarColor,
+      this.image,
+      this.width,
+      this.height});
 
   @override
   _ImageEditorProState createState() => _ImageEditorProState();
@@ -42,6 +50,12 @@ class ImageEditorPro extends StatefulWidget {
 
 var slider = 0.0;
 String font = 'Robotto';
+
+enum AppState {
+  free,
+  picked,
+  cropped,
+}
 
 class _ImageEditorProState extends State<ImageEditorPro> {
   // create some values
@@ -85,8 +99,17 @@ class _ImageEditorProState extends State<ImageEditorPro> {
     super.dispose();
   }
 
+  AppState state;
+
   @override
   void initState() {
+    state = AppState.picked;
+    if (state == AppState.picked) {
+      double h = widget.height;
+      double w = widget.width;
+      hei = h;
+      wei = w;
+    }
     timers();
     selected.clear();
     _controller.clear();
@@ -101,74 +124,61 @@ class _ImageEditorProState extends State<ImageEditorPro> {
     super.initState();
   }
 
+  File cropped;
+  Future<Null> _cropImage() async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: _image.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.blue,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+    var decodedImage = await decodeImageFromList(croppedFile.readAsBytesSync());
+
+    if (croppedFile != null) {
+      cropped = croppedFile;
+      setState(() {
+        wei = decodedImage.width.toDouble();
+        hei = decodedImage.height.toDouble();
+        state = AppState.cropped;
+      });
+    }
+  }
+
+  double hei;
+  double wei;
+
   @override
   Widget build(BuildContext context) {
+    _image = widget.image;
+
     return Scaffold(
         backgroundColor: Colors.grey,
         key: scaf,
         appBar: new AppBar(
           actions: <Widget>[
-            new IconButton(
-                icon: Icon(FontAwesomeIcons.boxes),
-                onPressed: () {
-                  showCupertinoDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: new Text("Select Height Width"),
-                          actions: <Widget>[
-                            FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    height = int.parse(heightcontroler.text);
-                                    width = int.parse(widthcontroler.text);
-                                  });
-                                  heightcontroler.clear();
-                                  widthcontroler.clear();
-                                  Navigator.pop(context);
-                                },
-                                child: new Text("Done"))
-                          ],
-                          content: new SingleChildScrollView(
-                            child: new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                new Text("Define Height"),
-                                new SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                    controller: heightcontroler,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
-                                    decoration: InputDecoration(
-                                        hintText: 'Height',
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
-                                        border: OutlineInputBorder())),
-                                new SizedBox(
-                                  height: 10,
-                                ),
-                                new Text("Define Width"),
-                                new SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                    controller: widthcontroler,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
-                                    decoration: InputDecoration(
-                                        hintText: 'Width',
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
-                                        border: OutlineInputBorder())),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                }),
             new IconButton(
                 icon: Icon(Icons.clear),
                 onPressed: () {
@@ -210,111 +220,119 @@ class _ImageEditorProState extends State<ImageEditorPro> {
         body: Center(
           child: Screenshot(
             controller: screenshotController,
-            child: Container(
-              margin: EdgeInsets.all(20),
-              color: Colors.white,
-              width: width.toDouble(),
-              height: height.toDouble(),
-              child: RepaintBoundary(
-                  key: globalKey,
-                  child: Stack(
-                    children: <Widget>[
-                      _image != null
-                          ? Image.file(
-                              _image,
-                              height: height.toDouble(),
-                              width: width.toDouble(),
-                              fit: BoxFit.cover,
-                            )
-                          : Container(),
-                      Container(
-                        child: GestureDetector(
-                            onPanUpdate: (DragUpdateDetails details) {
-                              setState(() {
-                                RenderBox object = context.findRenderObject();
-                                Offset _localPosition = object
-                                    .globalToLocal(details.globalPosition);
-                                _points = new List.from(_points)
-                                  ..add(_localPosition);
-                              });
-                            },
-                            onPanEnd: (DragEndDetails details) {
-                              _points.add(null);
-                            },
-                            child: Signat()),
-                      ),
-                      Stack(
-                        children: multiwidget.asMap().entries.map((f) {
-                          return type[f.key] == 1
-                              ? EmojiView(
-                                  left: offsets[f.key].dx,
-                                  top: offsets[f.key].dy,
-                                  ontap: () {
-                                    scaf.currentState
-                                        .showBottomSheet((context) {
-                                      return Sliders(
-                                        size: f.key,
-                                        sizevalue: fontsize[f.key].toDouble(),
-                                      );
-                                    });
-                                  },
-                                  onpanupdate: (details) {
-                                    setState(() {
-                                      offsets[f.key] = Offset(
-                                          offsets[f.key].dx + details.delta.dx,
-                                          offsets[f.key].dy + details.delta.dy);
-                                    });
-                                  },
-                                  value: f.value.toString(),
-                                  fontsize: fontsize[f.key].toDouble(),
-                                  align: TextAlign.center,
-                                )
-                              : type[f.key] == 2
-                                  ? TextView(
-                                      left: offsets[f.key].dx,
-                                      top: offsets[f.key].dy,
-                                      pressed: selected[f.key],
-                                      ontap2: () {
-                                        multiwidget.removeAt(f.key);
-                                        color.removeAt(f.key);
-                                        fontsize.removeAt(f.key);
-                                        fonts.removeAt(f.key);
-                                        offsets.removeAt(f.key);
-                                        multiwidget.removeAt(f.key);
-                                        howmuchwidgetis--;
-                                      },
-                                      ontap: () {
-                                        selected[f.key] = !selected[f.key];
+            child: new AspectRatio(
+              aspectRatio: wei / hei,
+              child: Container(
+                margin: EdgeInsets.all(20),
+                color: Colors.white,
+                height: double.infinity,
+                width: double.infinity,
+                child: RepaintBoundary(
+                    key: globalKey,
+                    child: Stack(
+                      fit: StackFit.passthrough,
+                      children: <Widget>[
+                        _image != null
+                            ? state == AppState.picked
+                                ? Image.file(
+                                    _image,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Image.file(
+                                    cropped,
+                                  )
+                            : Container(),
+                        Container(
+                          child: GestureDetector(
+                              onPanUpdate: (DragUpdateDetails details) {
+                                setState(() {
+                                  RenderBox object = context.findRenderObject();
+                                  Offset _localPosition = object
+                                      .globalToLocal(details.globalPosition);
+                                  _points = new List.from(_points)
+                                    ..add(_localPosition);
+                                });
+                              },
+                              onPanEnd: (DragEndDetails details) {
+                                _points.add(null);
+                              },
+                              child: Signat()),
+                        ),
+                        Stack(
+                          children: multiwidget.asMap().entries.map((f) {
+                            return type[f.key] == 1
+                                ? EmojiView(
+                                    left: offsets[f.key].dx,
+                                    top: offsets[f.key].dy,
+                                    ontap: () {
+                                      scaf.currentState
+                                          .showBottomSheet((context) {
+                                        return Sliders(
+                                          size: f.key,
+                                          sizevalue: fontsize[f.key].toDouble(),
+                                        );
+                                      });
+                                    },
+                                    onpanupdate: (details) {
+                                      setState(() {
+                                        offsets[f.key] = Offset(
+                                            offsets[f.key].dx +
+                                                details.delta.dx,
+                                            offsets[f.key].dy +
+                                                details.delta.dy);
+                                      });
+                                    },
+                                    value: f.value.toString(),
+                                    fontsize: fontsize[f.key].toDouble(),
+                                    align: TextAlign.center,
+                                  )
+                                : type[f.key] == 2
+                                    ? TextView(
+                                        left: offsets[f.key].dx,
+                                        top: offsets[f.key].dy,
+                                        pressed: selected[f.key],
+                                        ontap2: () {
+                                          multiwidget.removeAt(f.key);
+                                          color.removeAt(f.key);
+                                          fontsize.removeAt(f.key);
+                                          fonts.removeAt(f.key);
+                                          offsets.removeAt(f.key);
+                                          multiwidget.removeAt(f.key);
+                                          howmuchwidgetis--;
+                                        },
+                                        ontap: () {
+                                          selected[f.key] = !selected[f.key];
 
-                                        scaf.currentState
-                                            .showBottomSheet((context) {
-                                          return Sliders(
-                                            size: f.key,
-                                            sizevalue:
-                                                fontsize[f.key].toDouble(),
-                                          );
-                                        });
-                                      },
-                                      onpanupdate: (details) {
-                                        setState(() {
-                                          offsets[f.key] = Offset(
-                                              offsets[f.key].dx +
-                                                  details.delta.dx,
-                                              offsets[f.key].dy +
-                                                  details.delta.dy);
-                                        });
-                                      },
-                                      value: f.value.toString(),
-                                      font: fonts[f.key],
-                                      fontsize: fontsize[f.key].toDouble(),
-                                      align: TextAlign.center,
-                                      color: color[f.key],
-                                    )
-                                  : new Container();
-                        }).toList(),
-                      )
-                    ],
-                  )),
+                                          scaf.currentState
+                                              .showBottomSheet((context) {
+                                            return Sliders(
+                                              size: f.key,
+                                              sizevalue:
+                                                  fontsize[f.key].toDouble(),
+                                            );
+                                          });
+                                        },
+                                        onpanupdate: (details) {
+                                          setState(() {
+                                            offsets[f.key] = Offset(
+                                                offsets[f.key].dx +
+                                                    details.delta.dx,
+                                                offsets[f.key].dy +
+                                                    details.delta.dy);
+                                          });
+                                        },
+                                        value: f.value.toString(),
+                                        font: fonts[f.key],
+                                        fontsize: fontsize[f.key].toDouble(),
+                                        align: TextAlign.center,
+                                        color: color[f.key],
+                                      )
+                                    : new Container();
+                          }).toList(),
+                        )
+                      ],
+                    )),
+              ),
             ),
           ),
         ),
@@ -424,6 +442,76 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                         });
                       },
                       title: 'Emoji',
+                    ),
+                    BottomBarContainer(
+                      icons: Icons.photo_size_select_large,
+                      ontap: () {
+                        state = AppState.picked;
+                        _cropImage();
+
+                        /*showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: new Text("Select Height Width"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          height =
+                                              int.parse(heightcontroler.text);
+                                          width =
+                                              int.parse(widthcontroler.text);
+                                        });
+                                        heightcontroler.clear();
+                                        widthcontroler.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: new Text("Done"))
+                                ],
+                                content: new SingleChildScrollView(
+                                  child: new Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      new Text("Define Height"),
+                                      new SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                          controller: heightcontroler,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(),
+                                          decoration: InputDecoration(
+                                              hintText: 'Height',
+                                              contentPadding:
+                                                  EdgeInsets.only(left: 10),
+                                              border: OutlineInputBorder())),
+                                      new SizedBox(
+                                        height: 10,
+                                      ),
+                                      new Text("Define Width"),
+                                      new SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                          controller: widthcontroler,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(),
+                                          decoration: InputDecoration(
+                                              hintText: 'Width',
+                                              contentPadding:
+                                                  EdgeInsets.only(left: 10),
+                                              border: OutlineInputBorder())),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      ,*/
+                      },
+                      title: 'Scale1',
                     ),
                   ],
                 ),
